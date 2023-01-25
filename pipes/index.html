@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js" integrity="sha512-3WFaXQUsbGieECwv3t3DvyAkZ7pp+/rIKOQnx7NKhfwIF0u2l+DYsE2eF635ewJVj3YTU4/Ug6UqEkSTZCiSew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="sketch.js"></script>
+    <script src="pipe.js"></script>
+    <script src="level.js"></script>
+    <style>
+        body, html, * {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body{
+            text-align: center;
+            background-color:rgb(75, 73, 73);
+        }
+
+        body {font-family: Arial, Helvetica, sans-serif;}
+
+        /* The Modal (background) */
+        .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        }
+
+    </style>
+</head>
+<body>
+    
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+
+          <h1>LEVEL <span id="levelN"></span> COMPLETED</h1>
+
+          <table>
+            <tr>
+                <td>
+                    <h2>TIME:</h2>
+                </td>
+                <td>
+                    <h3 id="timeDisp"></h3>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <h2>MOVES:</h2>
+                </td>
+                <td>
+                    <h3 id="moves"></h3>
+                </td>
+            </tr>
+          </table>
+          <button onmouseup="nextLevel()">NEXT LEVEL</button>
+        </div>
+      
+      </div>
+      
+<script>
+
+
+
+function showModal(moves,timeDisp){
+    console.log(moves,timeDisp);
+
+    displayModal(true)
+
+    document.getElementById("levelN").innerText=levelIndex
+    document.getElementById("moves").innerText=moves
+    document.getElementById("timeDisp").innerText=timeDisp/1000
+
+}
+window.onload=()=>{
+    displayModal(true)
+
+}
+
+
+var modal = document.getElementById("myModal");
+var span = document.getElementsByClassName("close")[0];
+
+
+function displayModal(x){
+    modal.style.display = x?"block":"none";
+}
+
+</script>
+</body>
+</html>

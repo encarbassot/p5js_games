@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #chat{
+  height:90vh;
+  overflow:scroll;
+}
+
+body{
+    margin: 0;
+
+}
+
+#container{
+  display: flex;
+  flex-wrap:wrap;
+
+}
+
+.pixel{
+  background:grey;
+}
+    </style>
+    <script src="https://socketservice.herokuapp.com/SocketService.min.js"></script>
+    <!--<script src="http://elioputo.ddns.net/libraries/socket.js"></script>-->
+    <script src="snake.js" ></script>
+    <script src="pixel.js" ></script>
+    <script src="canvas.js" ></script>
+    <script src="comunication.js" defer></script>
+    <script src="sketch.js" defer></script>
+</head>
+
+<body>
+  <div id="container">
+  </div>
+</body>
+</html>
