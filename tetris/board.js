@@ -97,7 +97,7 @@ class Board {
 	}
 	
 	
-	show() {
+	show(p) {
 		//===========================
 		// Draw the rectangle behind all the cells
 		// for the border and gridlines
@@ -105,21 +105,21 @@ class Board {
 
 
 		if (this.gridlines){
-			fill(this.background)
+			p.fill(this.background)
 		}else{
-			fill(240);
+			p.fill(240);
 		}
 		
-		stroke(this.background)
-		strokeWeight(this.borderSize);
+		p.stroke(this.background)
+		p.strokeWeight(this.borderSize);
 
 		// offset the rectangle so that
 		// top and right borders stay in canvas
-		let offset = floor(this.borderSize / 2)
+		let offset = Math.floor(this.borderSize / 2)
 
 		const rectangle_width = this.cellSize * this.cols + this.borderSize - 1
 		const rectangle_height = this.cellSize * this.rows + this.borderSize - 1
-		rect(offset, offset, rectangle_width, rectangle_height)
+		p.rect(offset, offset, rectangle_width, rectangle_height)
 		
 		
 		//===========================
@@ -132,18 +132,24 @@ class Board {
 				
 				// this.grid contains the colors of each cell
 				if(this.grid[row][col] === this.foreground){
-					fill(240)
+					p.fill(240)
 				}else{
 					const type = this.grid[row][col]
-					const color = tetrominoes[ type ].color
-					fill(color);
+					let color
+					if(typeof(type)=="string"){
+						console.log(typeof(type))
+						color = tetrominoes[ type ].color
+					}else{
+						color = type
+					}
+					p.fill(color)
 				}
 				
-				noStroke();
+				p.noStroke();
 				const x_pos = this.cellSize * col + this.borderSize
 				const y_pos = this.cellSize * row + this.borderSize
 				const width = this.cellSize - 1
-				rect(x_pos, y_pos, width, width);
+				p.rect(x_pos, y_pos, width, width);
 			}
 		}
 

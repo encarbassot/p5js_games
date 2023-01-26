@@ -1,31 +1,22 @@
-/*
-
-REFERENCES
-https://en.wikipedia.org/wiki/Tetris
-https://tetris.fandom.com/wiki
-https://tetris.fandom.com/wiki/SRS
-https://harddrop.com/wiki/SRS
-
-*/
-
-
-
-
 //const tetris = new Tetris()
 let tetris
+new p5((p)=>{
 
-function setup() {
-	tetris= new Tetris()
-	const [cvWidth,cvHeight] = tetris.calcSize()
+	tetris = new Tetris(p)
 
-	createCanvas(cvWidth,cvHeight)
-}
+    p.setup = ()=>{
+		const [cvWidth,cvHeight] = tetris.calcSize()
 
-function draw() {
+      	p.createCanvas(cvWidth,cvHeight);
+    }
+	p.draw=()=>{
+		tetris.update(p.millis())
 
-	tetris.update(millis())
+	 	tetris.draw()
+	}
 
-	tetris.draw()
-}
-
+	p.mouseClicked=()=>{
+		tetris.click(p.mouseX,p.mouseY)
+	}
+  },document.getElementById("canvasContainer"));
 

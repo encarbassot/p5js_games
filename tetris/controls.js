@@ -42,6 +42,7 @@ class Controls{
       break;
 
       case "h":
+      case "c":
         this.parent.cont_hold()
       break;
         
@@ -71,6 +72,10 @@ class Controls{
         
       case 'n':
         this.parent.cont_test_new()
+      break;
+
+      case 't':
+        this.parent.cont_test_srs()
       break;
 
     }//end of switch case

@@ -25,10 +25,28 @@ class Piece {
 		this.isghost = false;
 		this.isholded = false;
 
+		//only if tetris.testin == true
+		this.showSRSIndex=0
+		this.showSRS = false
+
+	}
+
+	showNextSRS(show=true){
+
+		if(show==false || (this.showSRSIndex==this.tetrominoe.offsets[0].length-1)){
+			this.showSRSIndex=0
+			this.showSRS=false
+			return
+		}
+
+		if(this.showSRS){
+			this.showSRSIndex++
+		}
+		this.showSRS=true
 	}
 
 	resetCoords(board,x,y){
-		this.x = x === undefined ? floor((board.cols - this.size) / 2) : x;
+		this.x = x === undefined ? Math.floor((board.cols - this.size) / 2) : x;
 		this.y = y || -2;
 	}
 	
@@ -59,21 +77,36 @@ class Piece {
 
 	
 
-	show(){
+	show(p){
 		const color = this.tetrominoe.color
-		fill(this.isghost ? '#ccc' : color)
+		p.fill(this.isghost ? '#ccc' : color)
 
 		for (const tile of this.tetrominoe.tiles) {
 			let [x,y] = this.getPixelPos(tile)
 			let cs = this.cellSize;
-			rect(x, y, cs-1, cs-1);
+			p.rect(x, y, cs-1, cs-1);
 
 			if(this.board.parent.testing && (tile[0] === 0 && tile[1] === 0) ){
-				push()
-				noFill()
-				stroke(0)
-				ellipse(x+cs/2,y+cs/2,cs/2)
-				pop()
+				p.push()
+				p.noFill()
+				p.stroke(0)
+				p.ellipse(x+cs/2,y+cs/2,cs/2)
+				p.pop()
+			}
+		}
+
+		if(this.showSRS){
+			const tilesRot = this.getTilesRotated(true)
+			for (const tile of tilesRot) {
+				let [x,y] = this.getPixelPos(tile)
+				let cs = this.cellSize;
+				p.fill(color+'8')
+				
+				const [xoff,yoff] = this.getOffsets(this.rotationIndex,this.rotationIndex+1)[this.showSRSIndex]
+				
+				p.stroke(0)
+				p.rect(x+xoff*this.cellSize, y+yoff*this.cellSize, cs-1, cs-1);
+				p.noStroke()
 			}
 		}
 
@@ -131,10 +164,7 @@ class Piece {
 		const r = this.rotationIndex+rot
 		const newRot = (r%4+4)%4
 		
-		let newTiles = this.tetrominoe.tiles.map(([x,y])=>{
-			return this.rotateTile([x,y],!clockwise)
-		})
-		this.tetrominoe.tiles = newTiles
+		this.tetrominoe.tiles = this.getTilesRotated(clockwise)
 
 		
 		if(shouldOffset){
@@ -145,6 +175,12 @@ class Piece {
 		}
 		
 		this.rotationIndex = newRot
+	}
+
+	getTilesRotated(clockwise){
+		return this.tetrominoe.tiles.map(([x,y])=>{
+			return this.rotateTile([x,y],!clockwise)
+		})
 	}
 
 	rotateTile([x,y],clockwise){
@@ -165,20 +201,53 @@ class Piece {
 		return [newXpos,newYpos]
 	}
 
-	checkOffset(oldRotationIndex,newRotationIndex){
-		//run all 5 tests
-
+	getOffsets(oldRotationIndex,newRotationIndex){
+		oldRotationIndex = (oldRotationIndex%4+4)%4
+		newRotationIndex = (newRotationIndex%4+4)%4
 		const tests1 = this.tetrominoe.offsets[oldRotationIndex]
 		const tests2 = this.tetrominoe.offsets[newRotationIndex]
 
-
-		for(let i=0;i<tests1.length;i++){
+		return tests1.map((x,i)=>{
 			const [x1,y1] = tests1[i]
 			const [x2,y2] = tests2[i]
 
 			const xOff = x1-x2
 			const yOff = y1-y2
+			return [xOff,-yOff]
+		})
+	}
 
+	checkOffset(oldRotationIndex,newRotationIndex){
+		//run all 5 tests
+
+		// const tests1 = this.tetrominoe.offsets[oldRotationIndex]
+		// const tests2 = this.tetrominoe.offsets[newRotationIndex]
+
+
+		// for(let i=0;i<tests1.length;i++){
+		// 	const [x1,y1] = tests1[i]
+		// 	const [x2,y2] = tests2[i]
+
+		// 	const xOff = x1-x2
+		// 	const yOff = y1-y2
+
+		// 	if(this.board.isValid(this,xOff,yOff)){
+		// 		//apply offset
+		// 		this.x += xOff
+		// 		this.y += yOff
+
+		// 		return true
+		// 	}
+
+		// }
+
+		// //return false if all failed
+		// return false
+
+		const tests = this.getOffsets(oldRotationIndex,newRotationIndex)
+
+		for (const [xOff,yOff] of tests) {
+			
 			if(this.board.isValid(this,xOff,yOff)){
 				//apply offset
 				this.x += xOff

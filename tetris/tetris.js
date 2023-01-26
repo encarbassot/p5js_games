@@ -1,5 +1,6 @@
 class Tetris{
-    constructor(){
+    constructor(p){
+        this.p=p //p5.js
         this.testing = true
 
         console.log("TETRIS")
@@ -71,77 +72,82 @@ class Tetris{
     }
 
     draw(){
-        background(251)
-        this.board.show()
+        this.p.background(251)
+        this.board.show(this.p)
 
-        this.showSideMenu(this.waitingBuffer,this.holdingPice)
+        this.showSideMenu(this.p,this.waitingBuffer,this.holdingPice)
         
 
         
 
         if (this.ghostMode){
-            this.ghostPiece.show()
+            this.ghostPiece.show(this.p)
         } 
-        this.fallingPiece.show()
+        this.fallingPiece.show(this.p)
 
 
         if(this.paused){
-            fill(40,50)
-            rect(0,0,width,height)
-            textAlign(CENTER,CENTER)
-            fill(0)
-            textSize(40)
-            text("PAUSE",width/2,height/2)
+            if(this.testing){
+                this.p.fill(40,20)
+                this.p.textSize(10)
+            }else{
+                this.p.textSize(40)
+                this.p.fill(40,50)
+            }
+            this.p.rect(0,0,this.p.width,this.p.height)
+            this.p.textAlign(this.p.CENTER,this.p.CENTER)
+            this.p.fill(0)
+            this.p.text("PAUSE",this.p.width/2,this.p.height/2)
         }
 
         if(this.gameOver){
-            fill(40,50)
-            rect(0,0,width,height)
-            textAlign(CENTER,CENTER)
-            fill(0)
-            textSize(40)
-            text("GAME",width/2,height/2-30)
-            text("OVER",width/2,height/2+30)
+            this.p.fill(40,50)
+            this.p.rect(0,0,this.p.width,this.p.height)
+            this.p.textAlign(this.p.CENTER,this.p.CENTER)
+            this.p.fill(0)
+            this.p.textSize(40)
+            this.p.text("GAME",this.p.width/2,this.p.height/2-30)
+            this.p.text("OVER",this.p.width/2,this.p.height/2+30)
         }
 
         
     }
 
 
-    showSideMenu(waiting,holding){
+    showSideMenu(p,waiting,holding){
         let x = 11
         let y = this.rows - 5 - 11
 
         const cs = this.cellSize
 
-        fill(240)
-        stroke(170)
+        p.fill(240)
+        p.stroke(170)
 
-        rect(x*cs,y*cs,5*cs,10*cs)
-        noStroke()
+        p.rect(x*cs,y*cs,5*cs,10*cs)
+        p.noStroke()
 
-        this.showPiece(waiting[0],x + 0.5,y+1,cs)
-        this.showPiece(waiting[1],x + 0.5,y+3+1,cs)
-        this.showPiece(waiting[2],x + 0.5,y+6+1,cs)
+        this.showPiece(p,waiting[0],x + 0.5,y+1,cs)
+        this.showPiece(p,waiting[1],x + 0.5,y+3+1,cs)
+        this.showPiece(p,waiting[2],x + 0.5,y+6+1,cs)
 
         x = 11
         y = this.rows -5
 
-        fill(240)
-        stroke(170)
+        p.fill(240)
+        p.stroke(170)
 
-        rect(x*cs,y*cs,5*cs,5*cs)
-        noStroke()
+        p.rect(x*cs,y*cs,5*cs,5*cs)
+        p.noStroke()
 
         if(this.holdingPice){
-            this.showPiece(this.holdingPice.type,x + 0.5,y +1,cs)
+            this.showPiece(p,this.holdingPice.type,x + 0.5,y +1,cs)
         }
     }
 
-    showPiece(piece,_x,_y,cellSize) {
+    showPiece(p,piece,_x,_y,cellSize) {
         //TODO repeated in Piece.js:show()[46]
         const tetromino = tetrominoes[piece]
-        fill(tetromino.color)
+        p.fill(tetromino.color)
         if(tetromino.w===3){
             _x+=0.5
         }
@@ -154,10 +160,25 @@ class Tetris{
         for (const [col,row] of tetromino.tiles) {
             let x = (_x + col +1) * cellSize;
             let y = (_y + (-row) +1) * cellSize;
-			rect(x, y, cellSize-1, cellSize-1);
+			p.rect(x, y, cellSize-1, cellSize-1);
 		}
 
 	}
+
+    click(mouseX,mouseY){
+
+        const col = Math.floor(mouseX/this.cellSize)
+        const row = Math.floor(mouseY/this.cellSize)
+
+        console.log("HOLA",row,col,col>=0 , col < this.columns , row>=0 , row <this.columns)
+        if(col>=0 && col < this.columns && row>=0 && row <this.rows){
+            if(this.board.grid[row][col]){
+                this.board.grid[row][col]=0
+            }else{
+                this.board.grid[row][col]=1
+            }
+        }
+    }
 
 
     calcSize(){
@@ -185,7 +206,8 @@ class Tetris{
         }
         
         const npieces = pieces.filter(x=>!this.waitingBuffer.includes(x))
-        this.waitingBuffer.push(random(npieces))
+        const iRand = Math.floor(Math.random()*npieces.length)
+        this.waitingBuffer.push(npieces[iRand])
         
         return result
     }
@@ -229,7 +251,7 @@ class Tetris{
         this.ghostPiece.isghost = true
         this.ghostPiece.cells = this.fallingPiece.cells
     
-        redraw()
+        this.p.redraw()
     }
     
 
@@ -323,13 +345,13 @@ class Tetris{
     //controls utils
 
     cont_reset(){
-        console.log("RESRET",this.gameOver)
         this.holdingPice=undefined
         this.paused = false
+        this.waitingBuffer=[]
+        this.fillWaiting(this.waitingLength)
         this.spawnNewPiece();
         this.board.resetGrid();
         this.gameOver=false
-        console.log("RESRET",this.gameOver)
     }
 
     cont_pause(){
@@ -350,6 +372,8 @@ class Tetris{
     cont_test_up(){
         if(this.testing){
             this.fallingPiece.y--;
+        }else{
+            this.cont_rotateCW()
         }
     }
 
@@ -357,6 +381,15 @@ class Tetris{
         if(this.testing){
             this.spawnNewPiece()
         }
+    }
+
+    cont_test_srs(){
+        if(this.testing){
+            this.fallingPiece.showNextSRS(true)
+
+            console.log(this.fallingPiece.showSRS,this.fallingPiece.showSRSIndex)
+        }
+
     }
 
     
