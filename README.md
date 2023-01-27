@@ -5,6 +5,14 @@ I started many years ago watching [The Coding Train](https://www.youtube.com/@Th
 ## Games i did
 - [Tetris](./tetris/)
 - [Pipes](./pipes/)
+- [2048] (./2048)
+- [Asteroid](./Asteroid)
+- [FlappyBird](./flappy)
+- [Hanoi Towers](./hanoi)
+- [Minesweeper](./minesweeper)
+- [Pong](./pong)
+- [Snake](./snake)
+- [Solitario](./solitario)
 
 ## Games in process
 - [Sudoku](./sudoku/)

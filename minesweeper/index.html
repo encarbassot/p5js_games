@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+
+
+
+<link rel="stylesheet" href="modal.css">
+
+    <style>
+        :root{
+            --background: #ccc;
+            --border: #DDD;
+        }
+
+        body{
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: var(--background);
+        }
+        
+        .container{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            border: 4px outset var(--border);
+            padding: 6px;
+        }
+
+        header, #canvas{
+            border: 4px inset var(--border);
+        }
+
+        header{
+            padding: 12px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        #canvas{
+            display: grid;
+            gap: 0;
+            
+
+        }
+
+        #canvas div, #face,#settings,#phoneSwitch,#counter div,#timer div,#phoneSwitch{
+            background-image: url(minesweeper.png);
+
+        }
+        #canvas div, #phoneSwitch{
+            height: 32px;
+            width: 32px;
+        }
+
+        #face,#settings{
+            width:52px;
+            height:52px;
+        }
+
+        #counter, #timer{
+            background-color: black;
+            display: flex;
+            padding: 0 2px;
+        }
+
+        #counter div,#timer div{
+            margin: auto 0;
+            float: left;
+            width: 26px;
+            height: 46px;
+        }
+
+        #count1{
+            width: 26px;
+            height: 46px;
+        }
+
+
+
+        #canvas div:hover,#face:hover {
+            -webkit-filter: brightness(85%);
+            -webkit-transition: all 10ms ease;
+            -moz-transition: all 10ms ease;
+            -o-transition: all 10ms ease;
+            -ms-transition: all 10ms ease;
+            transition: all 10ms ease;
+        }
+
+        #phoneSwitch{background-position:-224px -78px;}
+        #phoneSwitch:active{background-position:-128px -78px;}
+        #phoneSwitch.changed{background-position:-32px -78px;}
+        #phoneSwitch.changed:active{background-position: 0 -46px;}
+
+        #settings{background-position: -156px -162px;}
+        #settings:active{background-position: -208px -162px;}
+        .num0{background-position:0 0;}
+        .num1{background-position:-26px 0;}
+        .num2{background-position:-52px 0;}
+        .num3{background-position:-78px 0;}
+        .num4{background-position:-104px 0;}
+        .num5{background-position:-130px 0;}
+        .num6{background-position:-156px 0;}
+        .num7{background-position:-182px 0;}
+        .num8{background-position:-208px 0;}
+        .num9{background-position:-234px 0;}
+        .num-{background-position:-260px 0;}
+
+        .blank{background-position: 0 -78px;}
+        .open0{background-position: 0 -46px;}
+        .open1{background-position: -32px -46px;}
+        .open2{background-position: -64px -46px;}
+        .open3{background-position: -96px -46px;}
+        .open4{background-position: -128px -46px;}
+        .open5{background-position: -160px -46px;}
+        .open6{background-position: -192px -46px;}
+        .open7{background-position: -224px -46px;}
+        .open8{background-position: -256px -46px;}
+        .bombflagged{background-position:-32px -78px;}
+        .bombdeath{background-position:-64px -78px;}
+        .bombmisflagged{background-position:-96px -78px;}
+        .bombrevealed{background-position:-128px -78px;}
+        .question{background-position:-160px -78px;}
+        .questionpressed{background-position:-192px -78px;}
+
+        header .facesmile{background-position:0 -110px;}
+        header .facepressed{background-position:-52px -110px;}
+        header .faceooh{background-position:-104px -110px;}
+        header .facedead{background-position:-156px -110px;}
+        header .facewin{background-position:-208px -110px;}
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div id="counter">
+                <div class="num0"></div>
+                <div class="num0"></div>
+                <div class="num0"></div>
+            </div>
+            <div id="settings" class="settingsOn"></div>
+            <div id="face" class="facesmile"></div>
+            <div id="phoneSwitch" style="display: none;"></div>
+            <div id="timer">
+                <div class="num0"></div>
+                <div class="num0"></div>
+                <div class="num0"></div>
+            </div>
+        </header>
+        <div id="canvas"></div>
+
+    </div>
+
+    <!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2>Configuration</h2>
+      </div>
+      <div class="modal-body">
+        <p>
+            <label >difficulty</label>
+            <select id="dificultySelector" onchange="changeDificulty(event)">
+                <option value="easy" >Easy</option>
+                <option value="medium" selected>Medium</option>
+                <option value="hard">Hard</option>
+                <option value="custom">custom</option>
+            </select>
+            <input type="text" id="difficulty" value="15" disabled>% bombs
+        </p>
+        <p>
+            <label>Size:</label>
+            <select id="boardSelector" onchange="changeSize(event)">
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+                <option value="full" selected>Full Screen</option>
+                <option value="custom">Custom</option>
+            </select><br>
+            <label >Columns:</label>
+            <input type="text" id="columns" disabled>
+            <br>
+            <label >Rows:</label>
+            <input type="text" id="rows" disabled>
+        </p>
+        <p>
+            <label for="easyLeft">Easy discover</label>
+            <input type="checkbox" name="easyLeft" id="easyLeft">
+            <label for="easyLeft"><small for="easyleft">click a discovered cell to discover all neighbors if the number matches</small></label>
+            <br>
+            <label for="easyRight">Easy Flag</label>
+            <input type="checkbox" name="easyRight" id="easyRight">
+            <label for="easyRight"><small>flag a discovered cell to flag all neighbors if the number matches</small></label>
+        </p>
+
+
+      </div>
+      <div class="modal-footer">
+        <button onclick="applySettings()">Apply</button>
+      </div>
+    </div>
+  
+  </div>
+
+
+</body>
+
+<script src="sketch.js"></script>
+<script>
+    let game
+window.onload=()=>{
+    let gameParameters ={
+        difficulty:15,
+        columns:undefined,
+        rows:undefined,
+        easyLeft:false,
+        easyRight:false,
+    }
+    
+    checkURL(gameParameters)
+    game = new Game(gameParameters)
+
+}
+
+let sizeValues={
+    small:{columns:9,rows:9},
+    medium:{columns:16,rows:16},
+    large:{columns:30,rows:16},
+}
+let dificultyValue={
+    easy:12,
+    medium:15,
+    hard:20
+}
+
+
+let modal = document.querySelector("#myModal");
+let difficulty = document.querySelector('#difficulty');
+let columns = document.querySelector('#columns')
+let rows = document.querySelector('#rows')
+let easyRight=document.querySelector('#easyRight')
+let easyLeft=document.querySelector('#easyLeft')
+
+document.querySelector("#settings").onclick = function() {
+  modal.style.display = "block";
+}
+
+document.querySelector(".close").onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+function checkURL(gameParameters){
+    var searchParams = new URLSearchParams(window.location.search);
+
+    for(var pair of searchParams.entries()) {
+        gameParameters[pair[0]]=pair[1]
+    }
+    console.log(gameParameters);
+
+    //set columns and rows
+    let i = Object.values(sizeValues).findIndex(u=>u.columns==gameParameters.columns&&u.rows==gameParameters.rows)
+    if(i>=0){
+        console.log('found',);
+        document.querySelector('#boardSelector').value = Object.keys(sizeValues)[i]
+    }else if(gameParameters.columns==undefined&&gameParameters.rows==undefined){
+        document.querySelector('#boardSelector').value='full'
+    }else{
+        document.querySelector('#boardSelector').value='custom'
+        columns.value = gameParameters.columns||''
+        rows.value = gameParameters.rows||''
+        columns.disabled=false
+        rows.disabled=false
+    }
+
+    //set difficulty
+    let diff = Object.values(dificultyValue).findIndex(e=>e==gameParameters.difficulty)
+    if(diff<0){
+        difficulty.value = gameParameters.difficulty
+        document.querySelector('#dificultySelector').value='custom'
+        difficulty.disabled=false
+    }else{
+        difficulty.value = gameParameters.difficulty
+        document.querySelector('#dificultySelector').value=Object.keys(dificultyValue)[diff]
+    }
+
+
+    //easyLeft and easyRight
+    if(gameParameters.easyLeft=="true"||(gameParameters.easyLeft!='false'&&isTouchDevice())){
+        easyLeft.checked=true
+        gameParameters.easyLeft=true
+    }else{
+        gameParameters.easyLeft=false
+    }
+    if(gameParameters.easyRight=="true"||(gameParameters.easyRight!='false'&&isTouchDevice())){
+        easyRight.checked=true
+        gameParameters.easyRight=true
+    }else{
+        gameParameters.easyRight=false
+    }
+    
+}
+
+function applySettings(){
+    let url =document.location.href.split('?')[0]
+    url+='?'
+    if(difficulty.value!='15')
+        url+='difficulty='+difficulty.value+'&'
+    if(columns.value!='')
+        url+='columns='+columns.value+'&'
+    if(rows.value!='')
+        url+='rows='+rows.value+'&'
+
+    url+=`easyLeft=${easyLeft.checked}&`
+    url+=`easyRight=${easyRight.checked}&`
+
+    window.open(url,'_self')
+}
+
+function changeSize(ev){
+    columns.disabled = true
+    rows.disabled = true
+    switch(ev.target.value){
+        case 'small':
+        case 'medium':
+        case 'large':
+            columns.value = sizeValues[ev.target.value].columns
+            rows.value = sizeValues[ev.target.value].rows
+        break;
+        case 'full':
+            columns.value = ''
+            rows.value = ''
+            break;
+        case 'custom':
+            columns.disabled = false
+            rows.disabled = false
+            break;
+    }
+}
+
+function changeDificulty(ev){
+    switch (ev.target.value) {
+        case 'easy':
+        case 'medium':
+        case 'hard':
+            difficulty.disabled=true
+            difficulty.value=dificultyValue[ev.target.value]
+            break;
+        case 'custom':
+            difficulty.disabled=false
+
+            break;
+        default:
+            break;
+    }
+}
+
+</script>
+</html>
