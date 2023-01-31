@@ -1,7 +1,7 @@
 class Tetris{
     constructor(p){
         this.p=p //p5.js
-        this.testing = true
+        this.testing = false
 
         console.log("TETRIS")
         this.columns = 10
@@ -167,15 +167,17 @@ class Tetris{
 
     click(mouseX,mouseY){
 
-        const col = Math.floor(mouseX/this.cellSize)
-        const row = Math.floor(mouseY/this.cellSize)
+        if(this.testing){
+            const col = Math.floor(mouseX/this.cellSize)
+            const row = Math.floor(mouseY/this.cellSize)
 
-        console.log("HOLA",row,col,col>=0 , col < this.columns , row>=0 , row <this.columns)
-        if(col>=0 && col < this.columns && row>=0 && row <this.rows){
-            if(this.board.grid[row][col]){
-                this.board.grid[row][col]=0
-            }else{
-                this.board.grid[row][col]=1
+            console.log("HOLA",row,col,col>=0 , col < this.columns , row>=0 , row <this.columns)
+            if(col>=0 && col < this.columns && row>=0 && row <this.rows){
+                if(this.board.grid[row][col]){
+                    this.board.grid[row][col]=0
+                }else{
+                    this.board.grid[row][col]=1
+                }
             }
         }
     }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <script src="/js/site.js"></script>
+    <link rel='icon' href='/images/kiwi.ico' type='image/x-icon'>
+
+    <link rel="stylesheet" href="scrollbar.css">
+    <link rel="stylesheet" href="style.css">
+
+    <title>SinglePlayer</title>
+    <style>
+      .soon{
+        filter: brightness(50%);
+      }
+    </style>
+    </head>
+  <body>
+    <!-- <div class="topnav" id="myTopnav">
+      <a href="#home" class="active">Home</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+      <a href="#about">About</a>
+      <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div> -->
+    <div class="gradient">
+   <div class="title">
+    <h1> SinglePlayer.</h1>
+   </div>
+ <div class="cards" id="cardContainer"></div>
+  
+
+  </body>
+  <script type="text/javascript">
+let games=[
+  {name:'tetris',show:'TETRIS'},
+  {name:'minesweeper',show:'BUSCAMINAS'},
+  {name:'hanoi',show:'TORRES DE HANOI'},
+  {name:'2048',show:'2048'},
+  {name:'asteroid',show:'ASTEROID'},
+  {name:'flappy',show:'FLAPPY BIRD'},
+  {name:'snake',show:'SNAKE'},
+  {name:'pong',show:'PONG 2Player'},
+  //{name:'solitario',show:'SOLITARIO',soon:true},
+  {name:'solitario',show:'SOLITARIO'},
+  ]
+
+let cardContainer=document.querySelector('#cardContainer')
+games.forEach(game=>{
+  let card = document.createElement('DIV')
+  cardContainer.appendChild(card)
+  card.classList.add('card')
+
+  let a = document.createElement('A')
+  card.appendChild(a)
+
+  let card_img = document.createElement('DIV')
+
+  if(game.hasOwnProperty('soon')){
+    card_img.classList.add('soon')
+  }else{
+    a.href=''+game.name
+  }
+
+  a.appendChild(card_img)
+  card_img.classList.add('card_img')
+  card_img.style.backgroundImage=`url(_screenshots/${game.name}.png`
+  card_img.innerHTML='<div class="plus"><p>+</p></div>'
+
+  let h3 = document.createElement('H3')
+  a.appendChild(h3)
+  h3.innerText=game.show??game.name
+  h3.innerText+=game.hasOwnProperty('soon')?' Coming Soon':''
+  
+  let line = document.createElement('DIV')
+  a.appendChild(line)
+  line.classList.add('line')
+
+})
+  </script>
+</html>
