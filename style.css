@@ -43,6 +43,17 @@ margin: 0px;
       50%{background-position:100% 50%}
       100%{background-position:0% 50%}
   }
+
+  html,body{
+    font-family: lato;
+  }
+
+  footer{
+    padding: 50px;
+    width: 100%;
+    text-align: center;
+    color: white;
+  }
   
   .card p{
     font-family: lato;

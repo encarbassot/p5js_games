@@ -86,6 +86,10 @@ class Tetris{
         this.fallingPiece.show(this.p)
 
 
+        this.p.fill(0)
+        this.p.textSize(30)
+        this.p.text(this.board.clearedLines,this.cellSize*12,this.cellSize*2)
+
         if(this.paused){
             if(this.testing){
                 this.p.fill(40,20)

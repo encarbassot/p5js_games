@@ -19,6 +19,8 @@ class Board {
 
 		// whether or not gridlines are seen
 		this.gridlines = true;
+
+		this.clearedLines = 0
 	}
 
 	addToGrid(piece) {
@@ -50,6 +52,8 @@ class Board {
 				this.grid.splice(row, 1)
 				// and add an empty row to the top
 				this.grid.unshift(new Array(this.cols).fill(this.foreground));
+
+				this.clearedLines++
 			}
 			
 		}
