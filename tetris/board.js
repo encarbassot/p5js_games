@@ -130,6 +130,7 @@ class Board {
 		// Draw cells over the big rectangle
 		//===========================
 
+		p.noStroke();
 		for (let row = 0; row < this.grid.length; row++) {
 			for (let col = 0; col < this.grid[row].length; col++) {
 				
@@ -141,7 +142,6 @@ class Board {
 					const type = this.grid[row][col]
 					let color
 					if(typeof(type)=="string"){
-						console.log(typeof(type))
 						color = tetrominoes[ type ].color
 					}else{
 						color = type
@@ -149,7 +149,6 @@ class Board {
 					p.fill(color)
 				}
 				
-				p.noStroke();
 				const x_pos = this.cellSize * col + this.borderSize
 				const y_pos = this.cellSize * row + this.borderSize
 				const width = this.cellSize - 1

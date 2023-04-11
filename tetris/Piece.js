@@ -18,7 +18,7 @@ class Piece {
 		this.resetCoords(board,x,y)
 		
 		// gravity
-		this.dropInterval = 200 // in ms
+		this.dropInterval = 400 // in ms
 		this.dropBuffer = 0; // time since last drop
 
 		// whether this is a ghost piece

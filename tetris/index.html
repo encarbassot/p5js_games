@@ -5,11 +5,12 @@
 
   <title>Tetris</title>
 
-  <script src="/js/site.js"></script>
+  <script src="/lib/site.js"></script>
   <link rel='icon' href='/images/kiwi.ico' type='image/x-icon'>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js" integrity="sha512-3WFaXQUsbGieECwv3t3DvyAkZ7pp+/rIKOQnx7NKhfwIF0u2l+DYsE2eF635ewJVj3YTU4/Ug6UqEkSTZCiSew==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/addons/p5.sound.js"></script> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta charset="utf-8" />
   <style>
@@ -22,26 +23,113 @@
 
     body {
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      padding-top:1rem;
     }
+
+    #canvasContainer{
+      width: 70vw;
+    }
+
+    #canvasController{
+      position: relative;
+      width: 100%;
+      height: 100%º;
+    }
+
+    #btn_reset,#btn_pause,#btn_rotate,#btn_left,#btn_down,#btn_right,#btn_hold{
+      position:absolute;
+      -webkit-user-select: none; /* Safari */
+      -ms-user-select: none; /* IE 10 and IE 11 */
+      user-select: none; /* Standard syntax */
+    }
+
+    #btn_rotate,#btn_left,#btn_down,#btn_right,#btn_hold{
+    
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+    @media (min-width: 768px){
+      #canvasController{
+        /* display: none; */
+      }
+
+      html,body{
+        overflow: hidden;
+      }
+
+      body {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+
+
+#btn_reset{
+  top: 10px;
+  left: 10px;
+}
+
+#btn_pause{
+  top: 10px;
+  right: 10px;
+}
+
+#btn_rotate{
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#btn_left{
+  top: 130px;
+  left: 30%;
+  transform: translateX(-50%);
+}
+
+#btn_down{
+  top: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#btn_right{
+  top: 130px;
+  left: 70%;
+  transform: translateX(-50%);
+}
+
+#btn_hold{
+  top: 50px;
+  left: 70%;
+  transform: translateX(-50%);
+}
+
+
   </style>
 </head>
 
 <body>
 
   <div id="canvasContainer"></div>
-  <div style="display:none">
-    <button>UP</button>
-    <button>DOWN</button>
-    <button>LEFT</button>
-    <button>RIGHT</button>
-    <button>RIGHT</button>
-    <button>ROTATE CW</button>
-    <button>ROTATE CCW</button>
+  <div id="canvasController">
+    <button id="btn_reset">Reset</button>
+    <button id="btn_pause">Pause</button>
+    <button id="btn_rotate">Rotate</button>
+    <button id="btn_left">Left</button>
+    <button id="btn_down">Down</button>
+    <button id="btn_right">Right</button>
+    <button id="btn_hold">Hold</button>
   </div>
 
   <script src="tetrominoes.js"></script>
+  <script src="phoneControls.js"></script>
   <script src="board.js"></script>
   <script src="Piece.js"></script>
   <script src="controls.js"></script>

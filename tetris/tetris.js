@@ -187,11 +187,22 @@ class Tetris{
     }
 
 
-    calcSize(){
-        let waitingWidth = this.cellSize*6
+    calcSize(windowWidth,touch){
+        let waitingWidth = 6
 	
-        let totalWidth = this.cellSize * this.columns + this.board.borderSize*2 + waitingWidth
-        let totalHeight = this.cellSize * this.rows + this.board.borderSize*2
+        const widthCells = this.columns + waitingWidth
+        const heightCells = this.rows
+
+
+        if(touch){
+            this.cellSize = Math.floor(windowWidth/(widthCells*1.5))
+            this.board.cellSize = this.cellSize
+            this.fallingPiece.cellSize= this.cellSize
+            this.ghostPiece.cellSize = this.cellSize
+        }
+
+        let totalWidth = this.cellSize*widthCells + this.board.borderSize*2
+        let totalHeight = this.cellSize * heightCells + this.board.borderSize*2
 
         return [totalWidth,totalHeight]
     }

@@ -19,3 +19,4 @@ I started many years ago watching [The Coding Train](https://www.youtube.com/@Th
 
 ## TODO Games
 - Pacman
+- 8ball

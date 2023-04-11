@@ -2,54 +2,80 @@ class Suk{
     
     
     constructor(n=3){
+
         this.n=n
         this.m=n*n
-        this.mat = this.createMat(this.m)
-
+        
+        this.mat = this.generateSudoku(this.m)
         // this.fillRandom(0,9)
-        this.next()
+        // this.next(this.mat)
 
-        this.logTable()
+        this.logTable(this.mat)
+        console.log(this.isValid(this.mat))
 
     }
 
-    next(){
+    generateSudoku(m) {
+        let board = this.createMat(m)
+        this.fillBoard(board);
+        return board;
+    }
 
-        let stop = false
-        let i,j
-        for(i=0;i<this.m && !stop;i++){
-            for(j=0;j<this.m && !stop;j++){
-
-                if(this.mat[i][j]==0){
-                    stop = true
-                }
-            }
+    fillBoard(board,row=0, col=0) {
+        let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+      
+        if (col == 9) {
+          col = 0;
+          row++;
+          if (row == 9) return true;
         }
-        j--
-        i--
-
-        let x = j
-        let y = i
-        console.log("x",x,"y",y,"->",this.mat[y][x])
-        this.getPossibilities(x,y)
-        // console.log("Row",this.getRow(x,y))
-        // console.log("Row",this.getRow(x,y,false))
-        // console.log("Col",this.getCol(x,y))
-        // console.log("Col",this.getCol(x,y,false))
-        // console.log("Box",this.getBox(x,y))
-        // console.log("Box",this.getBox(x,y,false))
+      
+        if (board[row][col] != 0) return this.fillBoard(board,row, col + 1);
+      
+        const scrambledNums = nums.sort((a,b)=>Math.random()>0.5)
+        for (let i = 0; i < 9; i++) {
+          let num = scrambledNums[i];
+          if (this.canPlace(board,row, col, num)) {
+            board[row][col] = num;
+            if (this.fillBoard(board,row, col + 1)) return true;
+            board[row][col] = 0;
+          }
+        }
+      
+        return false;
     }
+
+    canPlace(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+          if (board[row][i] === num) return false;
+        }
+      
+        for (let i = 0; i < 9; i++) {
+          if (board[i][col] === num) return false;
+        }
+      
+        let subRow = Math.floor(row / 3) * 3;
+        let subCol = Math.floor(col / 3) * 3;
+        for (let i = 0; i < 3; i++) {
+          for (let j = 0; j < 3; j++) {
+            if (board[subRow + i][subCol + j] === num) return false;
+          }
+        }
+      
+        return true;
+    }
+      
 
     getPossibilities(k,r){ //k->x  r->y
-        const row = this.getRow(k,r,false)
-        const col = this.getCol(k,r,false)
-        const box = this.getBox(k,r,false)
+        const row = this.getRow(this.mat,k,r,false)
+        const col = this.getCol(this.mat,k,r,false)
+        const box = this.getBox(this.mat,k,r,false)
 
         const result = []
 
-        console.log(col)
-        console.log(row)
-        console.log(box)
+        // console.log(col)
+        // console.log(row)
+        // console.log(box)
 
         for(let i=1;i<=this.m;i++){
             if(!col.includes(i) && !row.includes(i) && !box.includes(i)){
@@ -61,7 +87,7 @@ class Suk{
         return result
     }
 
-    getBox(k,r,self=true){
+    getBox(mat,k,r,self=true){
         let x = parseInt(k/this.n)*this.n
         let y = parseInt(r/this.n)*this.n
 
@@ -72,9 +98,9 @@ class Suk{
                 const focusOnSelf = (j==r%this.n && i==k%this.n)
                 
                 if(self){
-                    result.push(this.mat[y+j][x+i])
+                    result.push(mat[y+j][x+i])
                 }else if(!focusOnSelf){
-                    result.push(this.mat[y+j][x+i])
+                    result.push(mat[y+j][x+i])
                 }
             }
         }
@@ -83,36 +109,31 @@ class Suk{
     }
 
 
-    getCol(k,r,self=true){
+    getCol(mat,k,r,self=true){
         if(self){
-            return this.mat.map(x=>x[k])
+            return mat.map(x=>x[k])
         }else{
-            return this.mat.map(x=>x[k]).filter((x,i)=>i!=r)
+            return mat.map(x=>x[k]).filter((x,i)=>i!=r)
         }
     }
 
-    getRow(k,r,self=true){
+    getRow(mat,k,r,self=true){
         if(self){
-            return this.mat[r]
+            return mat[r]
         }else{
-            return this.mat[r].filter((x,i)=>i!=k)
+            return mat[r].filter((x,i)=>i!=k)
         }
     }
 
 
-    copyMat(mat){
-        this.mat=JSON.parse(JSON.stringify(mat))
+    copy(mat){
+        return JSON.parse(JSON.stringify(mat))
     }
 
 
-    createMat(n){
-        const mat = []
-
-        for(let i=0;i<n;i++){
-            mat.push("0".repeat(n).split('').map(x=>0))
-        }
-
-        console.log(mat)
+    createMat(m){
+        //create a MxM array filled with 0 (Empty)
+        const mat = Array(m).fill(0).map(() => Array(m).fill(0));
         return mat
 
     }
@@ -123,17 +144,17 @@ class Suk{
     }
 
 
-    txt(){
+    txt(mat){
         let result=""
-        for (let i = 0; i < this.mat.length; i++) {
+        for (let i = 0; i < mat.length; i++) {
 
             if(i%3==0&&i!=0){
                 result+="\n═══╬═══╬═══"
             }
             let line = ""
 
-            for (let j = 0; j < this.mat[i].length; j++) {
-                const element = this.mat[i][j];
+            for (let j = 0; j < mat[i].length; j++) {
+                const element = mat[i][j];
                 if(j%3==0&&j!=0){
                     line+="║"
                 }
@@ -147,13 +168,55 @@ class Suk{
         return result
     }
 
-    logTable(){
+    logTable(mat){
         
-        console.log(this.txt())
-        document.body.innerHTML=this.txt().replaceAll(" ","&nbsp;&nbsp;").replaceAll("\n","<br>")
+        console.log(this.txt(mat))
+        document.body.innerHTML=this.txt(mat).replaceAll(" ","&nbsp;&nbsp;").replaceAll("\n","<br>")
 
     }
 
+    isValid(mat){
+        //check columns
+        for(let i=0;i<this.m;i++){
+            const col = this.getCol(mat,i,0,true)
+            if(!this.isSectionValid(col)){
+                return false
+            }
+        }
 
+        //check for rows
+        for(let i=0;i<this.m;i++){
+            const row = this.getRow(mat,0,i,true)
+            if(!this.isSectionValid(row)){
+                return false
+            }
+        }
+
+        //check for boxes
+        for(let i=0;i<this.n;i++){
+            for(let j=0;j<this.n;j++){
+                const box = this.getBox(mat,i,j,true)
+                if(!this.isSectionValid(box)){
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+    isSectionValid(sec){
+        //pass a column, row or box
+        const section = this.copy(sec)
+        while(section.length >=1){
+            const p = section.pop()
+
+            if( p!=0 && section.includes(p)){
+                return false
+            }
+        }
+
+        return true
+    }
 
 }
