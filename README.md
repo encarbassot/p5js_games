@@ -16,6 +16,7 @@ I started many years ago watching [The Coding Train](https://www.youtube.com/@Th
 
 ## Games in process
 - [Sudoku](./sudoku/)
+- [Car](./car)
 
 ## TODO Games
 - Pacman
