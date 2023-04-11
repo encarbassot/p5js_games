@@ -2,12 +2,13 @@
 this game is inspired in "Traffic Racer", "Lane Splitter", "Road Fighter", "Dr. Driving", and "Crazy Taxi"
 
 for this game i used my own [canvas library](https://github.com/encarbassot/elioUtils.js/blob/main/ElioCanvas.md)
+
 ***IMPORTANT you will need to downlad it also*** 
 
 
 it needs much more improvement,
 
-TODO
+## TODO
 - level dificulty
 - change road layout (half implemented)
 - cars swithcing lanes
